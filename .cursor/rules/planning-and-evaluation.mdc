@@ -1,0 +1,16 @@
+---
+description: During planning/evaluation, propose better approaches and ask clarifying questions before implementing
+alwaysApply: true
+---
+
+# Planning and evaluation
+
+When the user is in **evaluation or planning** (scope docs, architecture, gaps, "plan this out"):
+
+1. **Challenge assumptions** — If a stated approach has a simpler or more reliable alternative (especially for Docker, queues, auth, or file I/O), say so clearly and recommend one option with rationale.
+2. **Cross-question** — Call out unresolved gaps (paths, failure modes, API contracts) before writing production code unless the user explicitly says to implement now.
+3. **Align with parent systems** — For submodule/compose setups, avoid duplicating concerns the parent already owns (e.g. job queues).
+4. **Record decisions** — Update `project_scope.md` (or agreed doc) when stack or API choices are settled.
+5. **Then implement** — After decisions are confirmed, prefer minimal v1 scope and iterate.
+
+Do not treat the scope document as frozen if the user indicates planning is still open.
