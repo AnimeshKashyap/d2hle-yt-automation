@@ -80,7 +80,8 @@ func runServe(args []string) {
 		Handler: srv.Handler(),
 	}
 
-	log.Info("starting http server", "addr", cfg.HTTPAddr, "data_root", cfg.DataRoot, "docs", "http://"+cfg.HTTPAddr+"/v1/docs")
+	docsURL := config.DocsBaseURL(cfg.HTTPHost, cfg.HTTPPort) + "/v1/docs"
+	log.Info("starting http server", "addr", cfg.HTTPAddr, "data_root", cfg.DataRoot, "docs", docsURL)
 
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
@@ -188,7 +189,7 @@ func runProfileLogin(args []string) {
 	defer cancel()
 
 	fmt.Println("A Chrome/Chromium window will open using your automation profile (not your daily browser profile).")
-	fmt.Println("Google blocks many automated browsers; we use installed Chrome + stealth flags. See BROWSER_CHANNEL in config.example.env.")
+	fmt.Println("Google blocks many automated browsers; we use installed Chrome + stealth flags. See BROWSER_CHANNEL in .env.example.")
 	fmt.Println("Sign in to Google/YouTube; MFA via phone/email is expected.")
 	p, err := studioSvc.InteractiveLogin(ctx, *id)
 	if err != nil {

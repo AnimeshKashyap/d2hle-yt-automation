@@ -20,14 +20,21 @@ go run github.com/mxschmitt/playwright-go/cmd/playwright@v0.6201.1 install chrom
 
 ## Configuration
 
-Copy [config.example.env](config.example.env) to `.env` and export variables before running (the binary reads **environment variables** only).
+Copy [.env.example](.env.example) to `.env` beside the binary or in the directory you run from (`.env` is gitignored; the example file uses placeholder paths only).
+
+Every command (`serve`, `profile …`, `job …`) loads configuration on startup. Precedence (highest wins):
+
+1. **`.env` file** — if present (`./.env` in the current working directory, otherwise `.env` next to the executable)
+2. **OS environment variables**
+3. **Built-in defaults** in code (see `.env.example`)
 
 Important defaults for local dev:
 
 | Variable | Typical local value |
 |----------|---------------------|
 | `DATA_ROOT` | `./data` |
-| `HTTP_ADDR` | `127.0.0.1:8081` |
+| `HTTP_HOST` | `127.0.0.1` (use `0.0.0.0` for LAN) |
+| `HTTP_PORT` | `8081` |
 | `ALLOWED_MEDIA_ROOTS` | `./data/media` |
 | `UPLOAD_HEADLESS` | `false` (match how you logged in) |
 | `SESSION_CHECK_HEADLESS` | `false` |
@@ -48,12 +55,10 @@ On Windows: `bin\d2hle-yt.exe`.
 ## Run the HTTP server
 
 ```bash
-# PowerShell example: load .env then serve
-Get-Content .env | ForEach-Object {
-  if ($_ -match '^\s*([^#][^=]+)=(.*)$') { Set-Item -Path "Env:$($matches[1])" -Value $matches[2] }
-}
 ./bin/d2hle-yt serve
 ```
+
+On Windows: `bin\d2hle-yt.exe serve` (place `.env` in the same folder or `cd` there first).
 
 ## CLI — profiles
 
@@ -124,7 +129,7 @@ Optional upload flags: `--description`, `--thumbnail <path>`, `--made-for-kids`,
 
 ## Typical first-time flow
 
-1. Set env from `config.example.env` (Chrome channel, `DATA_ROOT`, media roots).
+1. Copy `.env.example` to `.env` (Chrome channel, `DATA_ROOT`, media roots).
 2. `go build -o bin/d2hle-yt ./cmd/d2hle-yt` and install Playwright drivers (above).
 3. `d2hle-yt profile create --id main`
 4. `d2hle-yt profile login --id main` — sign in in the opened browser.
